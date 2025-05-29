@@ -9,5 +9,6 @@ export default [
 	layout("layouts/topbar.tsx", [
 		index("routes/preview.tsx"),
 		route("models/:modelId", "routes/model.tsx"),
+		route("profile", "routes/profile.tsx"),
 	]),
 ] satisfies RouteConfig;

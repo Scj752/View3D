@@ -50,9 +50,35 @@ import { Link } from "react-router";
     },
     
   ];
+const topLikers = [
+  {
+    username: "john",
+    avatar: "https://api.multiavatar.com/john.png",
+    likeCount: "1000",
+  },
+];
 export default function Preview() {
   return (
     <div className="pt-24 px-4 sm:px-6 lg:px-8">
+      {topLikers && (
+        <div className="bg-white p-4 rounded-lg shadow-md">
+          <h3 className="text-lg font-semibold mb-4">本周点赞达人</h3>
+          <ol className="space-y-3">
+            {topLikers.map((user, index) => (
+              <li key={user.id} className="flex items-center">
+                <span className="text-sm font-semibold text-pink-500">{index + 1}.</span>
+                <img 
+                  src={user.avatar} 
+                  alt={user.username} 
+                  className="w-6 h-6 rounded-full ml-2"
+                />
+                <span className="ml-1 text-gray-600">{user.username}</span>
+                <span className="ml-auto text-sm text-gray-500">点赞数：{user.likeCount}</span>
+              </li>
+            ))}
+          </ol>
+        </div>)
+      }
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {models.map((model) => (
           <Link

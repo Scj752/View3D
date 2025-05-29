@@ -1,3 +1,4 @@
+  /* app.css */
 @import "tailwindcss";
 
 @theme {
@@ -9,12 +10,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-color: #4A9DEC;
+  --secondary-color: #F3F3F3;
+  --text-color: #333;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text-color);
+  background-color: var(--secondary-color);
+}
+
 @layer components {
   .btn-primary {
     @apply py-2 px-5 bg-violet-500 text-white font-semibold rounded-full shadow-md hover:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-400;
   }
 }
-
 
 #error-page {
   display: flex;
@@ -24,41 +36,51 @@
   width: 100%;
 }
 
+.container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  perspective: 1000px;
+}
 
-  .container {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    perspective: 1000px;
-  }
+.box {
+  width: 100%;
+  height: 100%;
+  background: var(--primary-color);
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: rotate 3s infinite linear;
+}
 
-  .box {
-    width: 100%;
-    height: 100%;
-    background: #3498db;
-    position: absolute;
-    top: 0;
-    left: 0;
-    animation: rotate 3s infinite linear;
-  }
+.box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #9b59b6;
+  transform: rotateY(90deg);
+  transform-origin: center;
+}
 
-  .box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #9b59b6;
-    transform: rotateY(90deg);
-    transform-origin: center;
+@keyframes rotate {
+  from {
+    transform: rotateY(0deg);
   }
+  to {
+    transform: rotateY(360deg);
+  }
+}
 
-  @keyframes rotate {
-    from {
-      transform: rotateY(0deg);
-    }
-    to {
-      transform: rotateY(360deg);
-    }
-  }
+/* 点赞动画样式 */
+.like-animation {
+  animation: likePulse 0.8s ease-out;
+}
+
+@keyframes likePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}

@@ -6,6 +6,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import React from 'react';
 import styled from 'styled-components';
+import { ModelComments } from './ModelComments';
 
 export function Scene() {
 

@@ -10,5 +10,6 @@ export default [
 		index("routes/preview.tsx"),
 		route("models/:modelId", "routes/model.tsx"),
 		route("profile", "routes/profile.tsx"),
+		route("login", "routes/login.tsx"),
 	]),
 ] satisfies RouteConfig;

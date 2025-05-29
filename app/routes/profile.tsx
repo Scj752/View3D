@@ -4,7 +4,7 @@ import { Link } from "react-router";
 // 模拟个人信息和上传的模型数据
 const profile = {
     name: "John Doe",
-    avatar: "https://placehold.co/100x100",
+    avatar: localStorage.getItem("userAvatar"),
     uploadedModels: [
         { id: 1, name: "Model 1", preview: "https://placehold.co/300x200" },
         { id: 2, name: "Model 2", preview: "https://placehold.co/300x200" },
@@ -36,3 +36,15 @@ export default function Profile() {
         </div>
     );
 }
+// import React from 'react';
+
+// export default function Profile() {
+//     const userAvatar = localStorage.getItem('userAvatar');
+//     return (
+//         <div className="pt-24 px-4 sm:px-6 lg:px-8">
+//             <h2 className="text-2xl font-bold text-gray-800 mb-4">个人资料</h2>
+//             <img src={userAvatar} alt="用户头像" className="w-20 h-20 rounded-full mb-4" />
+//             <p>这里可以显示用户的其他信息</p>
+//         </div>
+//     );
+// }

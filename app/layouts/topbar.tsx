@@ -1,6 +1,7 @@
 import { 
     Form,
     Outlet,
+    Link,
 } from "react-router";
 
 import {
@@ -10,6 +11,9 @@ import {
 } from "./background";
 
 export default function Topbar() {
+	const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const userAvatar = localStorage.getItem('userAvatar');
+
     return (
         <>
             <div className="relative">
@@ -38,10 +42,17 @@ export default function Topbar() {
                                     <span>Upload</span>
                                 </button>
                             </Form>
-                            <button className="btn-primary flex items-center space-x-1">
-                                <i className="fa fa-user"></i> 
-                                <span>Login/Register</span>
-                            </button>
+                            {isLoggedIn ? (
+	                            <Link to="/profile">
+	                                <img src={userAvatar} alt="用户头像" className="w-10 h-10 rounded-full" />
+	                            </Link>
+	                        ) : (
+	                            
+	                            <button className="btn-primary flex items-center space-x-1">
+	                                <i className="fa fa-user"></i> 
+	                                <Link to="/login">Login/Register</Link>
+	                            </button>
+	                        )}
                         </div>
                     </div>
                 </div>

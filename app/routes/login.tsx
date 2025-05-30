@@ -12,6 +12,7 @@ export default function Login() {
         // 这里简单模拟登录成功，实际应用中需要验证用户名和密码
         if (username && password) {
             localStorage.setItem('isLoggedIn', 'true');
+			localStorage.setItem('username', username);
             localStorage.setItem('userAvatar', 'https://ts1.tc.mm.bing.net/th/id/OIP-C.5hemK99GC2sI6GEP3pYJmwAAAA?w=177&h=211&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2'); // 模拟用户头像
             navigate('/');
         } else {

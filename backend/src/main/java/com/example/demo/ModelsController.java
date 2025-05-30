@@ -2,11 +2,7 @@ package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,11 +10,15 @@ import java.util.List;
 @RequestMapping("/api/models")
 public class ModelsController {
     @Autowired
-    private ModelService
+    private ModelService modelService;
 
     @GetMapping("/{id}")
-    public Model getModel(@PathVariable String) {
-        return model.Service.getModelById(id);
+    public ResponseEntity<Model> getModel(@PathVariable String id) {
+        Model model = modelService.getModelById(id);
+        if (model != null) {
+            return ResponseEntity.ok(model);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping
@@ -27,12 +27,14 @@ public class ModelsController {
     }
 
     @PostMapping
-    public Model createModel(@RequestBody Model model) {
-        return modelService.saveModel(model);
+    public ResponseEntity<Model> createModel(@RequestBody Model model) {
+        Model savedModel = modelService.saveModel(model);
+        return ResponseEntity.ok(savedModel);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteModel(@PathVariable String id) {
+    public ResponseEntity<Void> deleteModel(@PathVariable String id) {
         modelService.deleteModel(id);
+        return ResponseEntity.noContent().build();
     }
 }

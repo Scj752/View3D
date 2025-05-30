@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -15,14 +17,4 @@ public class User {
     private String password;
     private String email;
     private Date createdAt;
-    private Date updatedAt;
-
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.createdAt = new Date();
-        this.updatedAt = this.createdAt;
-    }
-
 }

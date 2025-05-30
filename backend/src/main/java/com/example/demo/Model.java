@@ -12,25 +12,12 @@ public class Model {
     @Id
     private String id;
     private String name;
-    private String author;
+    private String creatorId;
     private String description;
-    private String imageUrl;
-
-    public Model(String name, String author, String description, String imageUrl) {
-        this.name = name;
-        this.author = author;
-        this.description = description;
-        this.imageUrl = imageUrl;
-    }
-
-    @Override
-    public String toString() {
-        return "Model{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", author='" + author + '\'' +
-                ", description='" + description + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
-    }
+    private List<String> tags;
+    private int likes;
+    private int downloads:
+    private double fileSize;
+    private String previewImageUrl;
+    private String filePath;
 }

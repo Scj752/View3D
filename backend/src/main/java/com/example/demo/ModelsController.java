@@ -6,50 +6,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/models")
 public class ModelsController {
+    @Autowired
+    private ModelService
 
-    private final ModelRepository modelRepository;
-
-    public ModelsController(ModelRepository modelRepository) {
-        this.modelRepository = modelRepository;
+    @GetMapping("/{id}")
+    public Model getModel(@PathVariable String) {
+        return model.Service.getModelById(id);
     }
 
-    @PostMapping("/api/models/upload")
-    public ResponseEntity<String> uploadModel(
-            @RequestParam("name") String name,
-            @RequestParam("author") String author,
-            @RequestParam("description") String description,
-            @RequestParam("imageUrl") String imageUrl) {
-        Model model = new Model(name, author, description, imageUrl);
-        modelRepository.save(model);
-        return ResponseEntity.ok("Model uploaded successfully");
+    @GetMapping
+    public List<Model> getAllModels() {
+        return modelService.getAllModels();
     }
 
-    @GetMapping("/api/models/all")
-    public ResponseEntity<List<Model>> getAllModels() {
-        List<Model> models = modelRepository.findAll();
-        return ResponseEntity.ok(models);
+    @PostMapping
+    public Model createModel(@RequestBody Model model) {
+        return modelService.saveModel(model);
     }
 
-    @GetMapping("/api/models/author")
-    public ResponseEntity<List<Model>> getModelsByAuthor(@RequestParam("author") String author) {
-        List<Model> models = modelRepository.findByAuthor(author);
-        return ResponseEntity.ok(models);
-    }
-
-    @GetMapping("/api/models/name")
-    public ResponseEntity<Model> getModelByName(@RequestParam("name") String name) {
-        Model model = modelRepository.findByName(name);
-        return ResponseEntity.ok(model);
-    }
-
-    @GetMapping("/api/models/delete")
-    public ResponseEntity<String> deleteModel(@RequestParam("id") String id) {
-        modelRepository.deleteById(id);
-        return ResponseEntity.ok("Model deleted successfully");
+    @DeleteMapping("/{id}")
+    public void deleteModel(@PathVariable String id) {
+        modelService.deleteModel(id);
     }
 }

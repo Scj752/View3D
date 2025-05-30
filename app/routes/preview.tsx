@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 
 // 模拟模型数据
@@ -57,7 +57,12 @@ const topLikers = [
     likeCount: "1000",
   },
 ];
+
 export default function Preview() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredModels = models.filter(model =>
+    model.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div className="pt-24 px-4 sm:px-6 lg:px-8">
       {topLikers && (

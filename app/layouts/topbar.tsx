@@ -2,61 +2,61 @@ import {
     Form,
     Outlet,
     Link,
+    useNavigate 
 } from "react-router";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCube,
+    faSpinner 
 } from '@fortawesome/free-solid-svg-icons';
 import { UploadButton } from './components/uploadbutton';
+import { useState } from 'react';
 
-export default function Topbar({
-    isLoggedIn = false,
-}) {
-	isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+export default function Topbar() {
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadError, setUploadError] = useState('');
+    const navigate = useNavigate();
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const userAvatar = localStorage.getItem('userAvatar');
-    const handleModelUpload = (files: FileList) => {
-        // 处理模型上传逻辑
-        if (files.length > 0) {
-          console.log("选择的文件:", files[0].name);
-          // 这里可以触发上传API调用
-          uploadModelToServer(files[0]);
-        }
-      };
 
-      const uploadModelToServer = async (file: File) => {
-        // 实际项目中，这里应该调用API上传文件
+    const handleModelUpload = async (files: FileList) => {
+        if (files.length > 0) {
+            setIsUploading(true);
+            setUploadError('');
+            try {
+                await uploadModelToServer(files[0]);
+                alert('上传成功');
+            } catch (error) {
+                setUploadError('上传失败，请稍后重试');
+            } finally {
+                setIsUploading(false);
+            }
+        }
+    };
+
+    const uploadModelToServer = async (file: File) => {
         const formData = new FormData();
         formData.append('modelFile', file);
-        
-        try {
-          // 示例API调用
-          const response = await fetch('/api/upload-model', {
+        const response = await fetch('/api/upload-model', {
             method: 'POST',
             body: formData
-          });
-          
-          if (response.ok) {
-            const result = await response.json();
-            console.log("上传成功:", result);
-            // 显示成功提示
-          } else {
-            console.error("上传失败");
-            // 显示错误提示
-          }
-        } catch (error) {
-          console.error("上传错误:", error);
+        });
+        if (!response.ok) {
+            throw new Error('上传失败');
         }
-      };
+    };
 
     return (
         <> 
             <div className="relative">
                 <div className="z-100 fixed w-full top-0 bg-gradient-to-r from-purple-600 to-pink-600 shadow-md">
                     <div className="flex justify-between items-center h-20 px-10">
+                        {/* 网站logo和名称 */}
                         <h1 className="font-sans text-3xl font-bold text-white">
                             <FontAwesomeIcon icon={faCube} className="mr-2" />
-                            <a href="/">View 3D</a>
+                            <Link to="/">View 3D</Link>
                         </h1>
+                        {/* 搜索框、上传按钮和登录/个人资料 */}
                         <div className="flex items-center space-x-4">
                             <Form>
                                 <div className="relative">
@@ -71,20 +71,24 @@ export default function Topbar({
                                     />
                                 </div>
                             </Form>
-                            <UploadButton label={"上传模型"}/>
+                            <UploadButton 
+                                label={isUploading ? <><FontAwesomeIcon icon={faSpinner} spin className="mr-2" />上传中...</> : "上传模型"}
+                                onFilesSelected={handleModelUpload}
+                                className={isUploading ? 'opacity-75 cursor-not-allowed' : ''}
+                            />
                             {isLoggedIn ? (
-	                            <Link to="/profile">
-	                                <img src={userAvatar} alt="用户头像" className="w-10 h-10 rounded-full" />
-	                            </Link>
-	                        ) : (
-	                            
-	                            <button className="btn-primary flex items-center space-x-1">
-	                                <i className="fa fa-user"></i> 
-	                                <Link to="/login">Login/Register</Link>
-	                            </button>
-	                        )}
+                                <Link to="/profile">
+                                    <img src={userAvatar} alt="用户头像" className="w-10 h-10 rounded-full" />
+                                </Link>
+                            ) : (
+                                <button className="btn-primary flex items-center space-x-1" onClick={() => navigate('/login')}>
+                                    <i className="fa fa-user"></i> 
+                                    Login/Register
+                                </button>
+                            )}
                         </div>
                     </div>
+                    {uploadError && <div className="text-red-500 text-center py-2">{uploadError}</div>}
                 </div>
             </div>
             <div>

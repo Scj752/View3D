@@ -1,6 +1,8 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 import lombok.*;
+
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -16,7 +18,7 @@ public class Model {
     private String description;
     private List<String> tags;
     private int likes;
-    private int downloads:
+    private int downloads;
     private double fileSize;
     private String previewImageUrl;
     private String filePath;

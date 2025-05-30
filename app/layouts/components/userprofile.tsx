@@ -11,6 +11,7 @@ import {
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
+import { EditProfileForm } from './editprofile.tsx';
 
 export function UserProfile({ profile, isCurrentUser, onEditProfile }) {
   const [showStats, setShowStats] = useState(false);
@@ -47,6 +48,37 @@ export function UserProfile({ profile, isCurrentUser, onEditProfile }) {
     }
     return num.toString();
   };
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempProfile, setTempProfile] = useState(profile);
+
+  const handleEditProfile = () => {
+    setTempProfile(profile); // 复制当前数据
+    setIsEditing(true);
+  };
+
+  const handleSaveProfile = (updatedProfile) => {
+    // 实际项目中，这里应该调用API保存数据
+    console.log("保存个人资料:", updatedProfile);
+    
+    // 模拟保存成功后更新状态
+    setIsEditing(false);
+    // 这里可以触发父组件的回调更新全局状态
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <EditProfileForm
+        initialProfile={tempProfile}
+        onSave={handleSaveProfile}
+        onCancel={handleCancelEdit}
+      />
+    );
+  }
   
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
@@ -61,7 +93,7 @@ export function UserProfile({ profile, isCurrentUser, onEditProfile }) {
         {isCurrentUser && (
           <button 
             className="absolute top-4 right-4 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-md transition-all duration-300 transform hover:scale-110"
-            onClick={onEditProfile}
+            onClick={handleEditProfile}
           >
             <FontAwesomeIcon icon={faEdit} />
           </button>
@@ -151,7 +183,7 @@ export function UserProfile({ profile, isCurrentUser, onEditProfile }) {
             {isCurrentUser ? (
               <button 
                 className="bg-pink-500 hover:bg-pink-600 text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md"
-                onClick={onEditProfile}
+                onClick={handleEditProfile}
               >
                 <FontAwesomeIcon icon={faEdit} className="mr-1" /> 编辑资料
               </button>

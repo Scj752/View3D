@@ -3,23 +3,58 @@ import {
     Outlet,
     Link,
 } from "react-router";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    SquareBackground,
-    MultiSquaresBackground,
-    ParticleBackground,
-} from "./background";
+    faCube,
+} from '@fortawesome/free-solid-svg-icons';
+import { UploadButton } from './components/uploadbutton';
 
-export default function Topbar() {
-	const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+export default function Topbar({
+    isLoggedIn = false,
+}) {
+	isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const userAvatar = localStorage.getItem('userAvatar');
+    const handleModelUpload = (files: FileList) => {
+        // 处理模型上传逻辑
+        if (files.length > 0) {
+          console.log("选择的文件:", files[0].name);
+          // 这里可以触发上传API调用
+          uploadModelToServer(files[0]);
+        }
+      };
+
+      const uploadModelToServer = async (file: File) => {
+        // 实际项目中，这里应该调用API上传文件
+        const formData = new FormData();
+        formData.append('modelFile', file);
+        
+        try {
+          // 示例API调用
+          const response = await fetch('/api/upload-model', {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            console.log("上传成功:", result);
+            // 显示成功提示
+          } else {
+            console.error("上传失败");
+            // 显示错误提示
+          }
+        } catch (error) {
+          console.error("上传错误:", error);
+        }
+      };
 
     return (
-        <>
+        <> 
             <div className="relative">
                 <div className="z-100 fixed w-full top-0 bg-gradient-to-r from-purple-600 to-pink-600 shadow-md">
                     <div className="flex justify-between items-center h-20 px-10">
                         <h1 className="font-sans text-3xl font-bold text-white">
+                            <FontAwesomeIcon icon={faCube} className="mr-2" />
                             <a href="/">View 3D</a>
                         </h1>
                         <div className="flex items-center space-x-4">
@@ -36,12 +71,7 @@ export default function Topbar() {
                                     />
                                 </div>
                             </Form>
-                            <Form>
-                                <button className="btn-primary flex items-center space-x-1" type="button">
-                                    <i className="fa fa-upload"></i> 
-                                    <span>Upload</span>
-                                </button>
-                            </Form>
+                            <UploadButton label={"上传模型"}/>
                             {isLoggedIn ? (
 	                            <Link to="/profile">
 	                                <img src={userAvatar} alt="用户头像" className="w-10 h-10 rounded-full" />

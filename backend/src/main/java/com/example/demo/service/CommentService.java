@@ -23,7 +23,8 @@ public class CommentService {
         Comment comment = new Comment();
         comment.setModelId(request.getModelId());
         comment.setUserId(request.getUserId());
-        comment.setCreateAt(LocalDateTime.now());
+        comment.setContent(request.getContent());
+        comment.setCreatedAt(LocalDateTime.now());
 
         return commentRepository.save(comment);
     }

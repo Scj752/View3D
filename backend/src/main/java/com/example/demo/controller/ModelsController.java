@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.core.io.Resource;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import org.slf4j.Logger;
 
@@ -61,7 +62,7 @@ public class ModelsController {
     })
     public String createModel(
         @Parameter(description = "模型上传请求", required = true)
-        @RequestBody ModelUploadRequest request) {
+        @ModelAttribute ModelUploadRequest request) {
 
         Model model = modelService.uploadModel(request);
         return "/api/models/" + model.getId();

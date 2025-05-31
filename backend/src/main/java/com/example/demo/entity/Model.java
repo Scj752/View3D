@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import lombok.*;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 
@@ -17,9 +18,10 @@ public class Model {
     private String creatorId;
     private String description;
     private List<String> tags;
+    private LocalDateTime uploadedAt;
     private int likes;
     private int downloads;
     private double fileSize;
-    private String previewImageUrl;
+    private String thumbnailUrl;
     private String filePath;
 }

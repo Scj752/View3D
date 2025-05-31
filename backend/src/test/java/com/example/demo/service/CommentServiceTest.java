@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +11,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+
+import com.example.demo.entity.Comment;
+import com.example.demo.repository.CommentRepository;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {

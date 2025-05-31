@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+import com.example.demo.entity.Comment;
+import com.example.demo.repository.CommentRepository;
+
 @Service
 public class CommentService {
     @Autowired
@@ -15,5 +18,9 @@ public class CommentService {
 
     public Comment saveComment(Comment comment) {
         return commentRepository.save(comment);
+    }
+
+    public void deleteComment(String commentId) {
+        commentRepository.deleteById(commentId);
     }
 }

@@ -4,7 +4,7 @@ import lombok.*;
 
 import org.springframework.data.annotation.Id;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -15,5 +15,5 @@ public class Comment {
 	private String modelId;
 	private String userId;
 	private String content;
-	private Date createdAt;
+	private LocalDateTime createdAt;
 }

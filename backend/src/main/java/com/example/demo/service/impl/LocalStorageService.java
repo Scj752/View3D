@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.context.annotation.Primary;
 
 import org.springframework.util.StringUtils;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
 import com.example.demo.service.FileStorageService;
 
 @Service("localStorageService")
+@Primary
 public class LocalStorageService implements FileStorageService {
     
     @Value("${file.upload-dir}")

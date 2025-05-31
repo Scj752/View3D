@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import com.example.demo.entity.Comment;
 import com.example.demo.service.CommentService;
+import com.examplde.demo.dto.CommentAddRequest;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -42,10 +43,13 @@ public class CommentController {
 
     @PostMapping("/add")
     @Operation(summary = "添加评论", description = "为指定模型添加新评论")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "评论添加成功",
+            content = @Content(schema = @Schema(implementation = CommentAddRequest.class))),
     public ResponseEntity<Comment> createComment(
         @Parameter(description = "评论内容", required = true)
-        @RequestBody Comment comment) {
-        return ResponseEntity.ok(commentService.saveComment(comment));
+        @RequestBody CommentAddRequest request) {
+        return ResponseEntity.ok(commentService.saveComment(request));
     }
 
     @DeleteMapping("/{commentId}")

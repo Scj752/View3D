@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+import com.example.demo.dto.UserAddRequest;
 
 @RestController
 @RequestMapping("/api/users")
@@ -44,17 +45,13 @@ public class UsersController {
     @PostMapping("/add")
     @Operation(summary = "添加用户", description = "添加一个新用户")
     public ResponseEntity<String> addUser(
-        @Parameter(description = "用户名", required = true)
-        @RequestParam("username") String username,
-        @Parameter(description = "用户密码", required = true)
-        @RequestParam("password") String password,
-        @Parameter(description = "用户邮件地址", required = true)
-        @RequestParam("email") String email) {
-        Optional<User> existingUser = userService.getUserByName(username);
+        @Parameter(description = "添加用户请求", required = true)
+        @RequestBody UserAddRequest request) {
+        Optional<User> existingUser = userService.getUserByName(request.getUsername());
         if (existingUser.isPresent()) {
             return ResponseEntity.badRequest().body("Username already exists");
         }
-        User newUser = new User(null, username, password, email, LocalDateTime.now());
+        User newUser = new User(null, request.getUsername(), request.getPassword(), request.getEmail(), LocalDateTime.now());
         userService.addUser(newUser);
         return ResponseEntity.ok("add user successful");
     }

@@ -51,11 +51,11 @@ public class ModelsController {
     private ServletContext servletContext;
 
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "上传新模型", description = "上传3D模型文件和相关信息")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "模型上传成功",
-            content = @Content(schema = @Schema(implementation = Model.class))),
+            content = @Content(schema = @Schema(implementation = ModelUploadRequest.class))),
         @ApiResponse(responseCode = "400", description = "无效的上传数据"),
         @ApiResponse(responseCode = "500", description = "文件上传失败")
     })

@@ -52,18 +52,18 @@ public class LocalStorageService implements FileStorageService {
         }
         
         // 返回相对路径
-        return "/" + subDirectory + "/" + fileName;
+        return subDirectory + "/" + fileName;
     }
 
-    public Resource loadFile(String filePath) {
+    public Resource loadFile(String fileKey) {
         try {
-            Path path = Paths.get(uploadDir).resolve(filePath).normalize();
-            Resource resource = new UrlResource(path.toUri());
+            Path filePath = Paths.get(uploadDir).resolve(fileKey).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
             
             if (resource.exists()) {
                 return resource;
             } else {
-                throw new FileNotFoundException("文件未找到: " + filePath);
+                throw new FileNotFoundException("文件未找到: " + fileKey);
             }
         } catch (MalformedURLException | FileNotFoundException e) {
             throw new RuntimeException("文件加载失败", e);

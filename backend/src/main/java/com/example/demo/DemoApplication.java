@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -30,6 +32,7 @@ public class DemoApplication {
 // 开发环境初始化数据
 @Component
 @Profile("dev") // 仅在开发环境执行
+@Slf4j
 class DataInitializer implements CommandLineRunner {
 
 	@Autowired
@@ -57,20 +60,20 @@ class DataInitializer implements CommandLineRunner {
 
 		// model repository initialization
 		Model model1 = new Model(null, "Test Model 1", user1.getId(), "This is a test model",
-                Arrays.asList("test", "model"), LocalDateTime.now(), 0, 0, 10.5,
+            Arrays.asList("test", "model"), LocalDateTime.now(), 0, 0, 10.5,
                 "http://example.com/preview1.jpg", "/path/to/file1");
-	        Model model2 = new Model(null, "Test Model 2", user2.getId(), "Another test model",
-	                Arrays.asList("test", "model2"), LocalDateTime.now(), 0, 0, 20.5,
+	    Model model2 = new Model(null, "Test Model 2", user2.getId(), "Another test model",
+	    	Arrays.asList("test", "model2"), LocalDateTime.now(), 0, 0, 20.5,
 	                "http://example.com/preview2.jpg", "/path/to/file2");
 
-	        modelRepository.save(model1);
-	        modelRepository.save(model2);
+	    modelRepository.save(model1);
+	    modelRepository.save(model2);
 
-	        // comment repository initialization
-	        Comment comment1 = new Comment(null, model2.getId(), user1.getId(), "very good!", LocalDateTime.now());
-	        Comment comment2 = new Comment(null, model1.getId(), user2.getId(), "Wonderful!", LocalDateTime.now());
+	    // comment repository initialization
+	    Comment comment1 = new Comment(null, model2.getId(), user1.getId(), "very good!", LocalDateTime.now());
+	    Comment comment2 = new Comment(null, model1.getId(), user2.getId(), "Wonderful!", LocalDateTime.now());
 
-	        commentRepository.save(comment1);
-	        commentRepository.save(comment2);
+	    commentRepository.save(comment1);
+	    commentRepository.save(comment2);
 	}
 }

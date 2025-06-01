@@ -28,9 +28,12 @@ import org.slf4j.Logger;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.demo.entity.Model;
 import com.example.demo.service.ModelService;
@@ -60,12 +63,12 @@ public class ModelsController {
         @ApiResponse(responseCode = "400", description = "无效的上传数据"),
         @ApiResponse(responseCode = "500", description = "文件上传失败")
     })
-    public String createModel(
+    public ResponseEntity<Model> createModel(
         @Parameter(description = "模型上传请求", required = true)
         @ModelAttribute ModelUploadRequest request) {
 
         Model model = modelService.uploadModel(request);
-        return "/api/models/" + model.getId();
+        return ResponseEntity.ok(model);
     }
 
     @GetMapping("/{id}")
@@ -90,21 +93,32 @@ public class ModelsController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/download/{filePath:.+}")
+    @GetMapping("/download/**")
     @Operation(hidden = true, summary = "下载模型/图片文件", description = "根据文件路径下载模型/图片文件")
-    public ResponseEntity<Resource> downloadFile(
-        @Parameter(description = "文件路径", required = true)
-        @PathVariable String filePath) {
-        
+    public ResponseEntity<?> downloadFile(
+        @Parameter(
+            name = "filePath",
+            description = "文件路径（需完整输入，如 path/to/file）",
+            example = "path/to/file",
+            in = ParameterIn.PATH,
+            required = true
+        )
+        HttpServletRequest request) {
+        String filePath = request.getRequestURI().split("/download/")[1];
+        log.info("Decoded filePath: " + URLDecoder.decode(filePath, StandardCharsets.UTF_8));
+        filePath = filePath.replaceAll("/+", "/").replaceAll("^\\.\\./", "");
+        log.info("Cleaned filePath: " + filePath);
+        // return ResponseEntity.ok().body(filePath);
         try {
             // 加载文件
             Resource resource = modelService.loadFileAsResource(filePath);
-            
+            log.info("Resource exists: " + resource.exists());
             // 确定内容类型
             String contentType = "application/octet-stream";
             try {
-                if (resource.exists() && resource.getFile().exists())
+                if (resource.exists() && resource.getFile().exists()) {
                     contentType = servletContext.getMimeType(resource.getFile().getAbsolutePath());
+                }
             } catch (IOException ex) {
                 log.info("无法确定文件类型.");
             }

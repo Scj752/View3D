@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
+import { getAllModels } from "../api";
 
 // 模拟模型数据
 // const models = [
@@ -7,49 +8,49 @@ import { Link } from "react-router";
 //     { id: 2, name: "Model 2", preview: "https://placehold.co/300x200" },
 //     // 可以添加更多模型数据
 // ];
-  const models = [
-    {
-      id: 1,
-      name: "Neo",
-      url: "https://placecats.com/neo/300/200",
-    },
-    {
-      id: 2,
-      name: "Millie",
-      url: "https://placecats.com/millie/300/200"
-    },
-    {
-      id: 3,
-      name: "Neo Banana",
-      url: "https://placecats.com/neo_banana/300/200"
-    },
-    {
-      id: 4,
-      name: "Bella",
-      url: "https://placecats.com/bella/300/200"
-    },
-    {
-      id: 1,
-      name: "Neo",
-      url: "https://placecats.com/neo/200/200",
-    },
-    {
-      id: 2,
-      name: "Millie",
-      url: "https://placecats.com/millie/200/200"
-    },
-    {
-      id: 3,
-      name: "Neo Banana",
-      url: "https://placecats.com/neo_banana/200/200"
-    },
-    {
-      id: 4,
-      name: "Bella",
-      url: "https://placecats.com/bella/200/200"
-    },
+//   const models = [
+//     {
+//       id: 1,
+//       name: "Neo",
+//       url: "https://placecats.com/neo/300/200",
+//     },
+//     {
+//       id: 2,
+//       name: "Millie",
+//       url: "https://placecats.com/millie/300/200"
+//     },
+//     {
+//       id: 3,
+//       name: "Neo Banana",
+//       url: "https://placecats.com/neo_banana/300/200"
+//     },
+//     {
+//       id: 4,
+//       name: "Bella",
+//       url: "https://placecats.com/bella/300/200"
+//     },
+//     {
+//       id: 1,
+//       name: "Neo",
+//       url: "https://placecats.com/neo/200/200",
+//     },
+//     {
+//       id: 2,
+//       name: "Millie",
+//       url: "https://placecats.com/millie/200/200"
+//     },
+//     {
+//       id: 3,
+//       name: "Neo Banana",
+//       url: "https://placecats.com/neo_banana/200/200"
+//     },
+//     {
+//       id: 4,
+//       name: "Bella",
+//       url: "https://placecats.com/bella/200/200"
+//     },
     
-  ];
+//  ];
 const topLikers = [
   {
     username: "john",
@@ -60,6 +61,16 @@ const topLikers = [
 
 export default function Preview() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [models, setModels] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchModels = async () => {
+      const data = await getAllModels();
+      setModels(data);
+    };
+    fetchModels();
+  }, []);
+
   const filteredModels = models.filter(model =>
     model.name.toLowerCase().includes(searchTerm.toLowerCase())
   );

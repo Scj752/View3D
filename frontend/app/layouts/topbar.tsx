@@ -11,6 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { UploadButton } from './components/uploadbutton';
 import { useState } from 'react';
+import UploadModel from './components/uploadmodel';
 
 export default function Topbar() {
     const [isUploading, setIsUploading] = useState(false);
@@ -19,32 +20,15 @@ export default function Topbar() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const userAvatar = localStorage.getItem('userAvatar');
 
-    const handleModelUpload = async (files: FileList) => {
-        if (files.length > 0) {
-            setIsUploading(true);
-            setUploadError('');
-            try {
-                await uploadModelToServer(files[0]);
-                alert('上传成功');
-            } catch (error) {
-                setUploadError('上传失败，请稍后重试');
-            } finally {
-                setIsUploading(false);
-            }
-        }
-    };
+    const [isUploadModelOpen, setIsUploadModelOpen] = useState(false);
 
-    const uploadModelToServer = async (file: File) => {
-        const formData = new FormData();
-        formData.append('modelFile', file);
-        const response = await fetch('/api/upload-model', {
-            method: 'POST',
-            body: formData
-        });
-        if (!response.ok) {
-            throw new Error('上传失败');
-        }
-    };
+      const handleUploadClick = () => {
+        setIsUploadModelOpen(true);
+      };
+
+      const handleCloseModel = () => {
+        setIsUploadModelOpen(false);
+      };
 
     return (
         <> 
@@ -73,7 +57,7 @@ export default function Topbar() {
                             </Form>
                             <UploadButton 
                                 label={isUploading ? <><FontAwesomeIcon icon={faSpinner} spin className="mr-2" />上传中...</> : "上传模型"}
-                                onFilesSelected={handleModelUpload}
+                                onClick={handleUploadClick}
                                 className={isUploading ? 'opacity-75 cursor-not-allowed' : ''}
                             />
                             {isLoggedIn ? (
@@ -91,9 +75,12 @@ export default function Topbar() {
                     {uploadError && <div className="text-red-500 text-center py-2">{uploadError}</div>}
                 </div>
             </div>
+
             <div>
                 <Outlet />
             </div>
+            
+            <UploadModel isOpen={isUploadModelOpen} onClose={handleCloseModel} />
         </>
     );
 }

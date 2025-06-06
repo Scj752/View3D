@@ -10,12 +10,16 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { BrowserRouter as Router } from 'react-router';
+import { AuthProvider } from './context/AuthContext';
+import Routes from './routes';
+import { renderRoutes } from "@react-router/dev";
 
 export default function App() {
   return (
-    <>
-      <Outlet />
-    </>
+    <AuthProvider>
+      {renderRoutes(routes)}
+    </AuthProvider>
   );
 }
 

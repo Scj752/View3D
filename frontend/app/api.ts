@@ -1,5 +1,50 @@
 // View3D/frontend/app/api.ts
-const API_BASE_URL = 'http://localhost:8080/api'; // 根据实际后端端口修改
+const API_BASE_URL = 'http://localhost:8080/api';
+
+// 登录
+export const login = async (username, password) => {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password }),
+    credentials: 'include', // 确保发送和接收cookie
+  });
+  
+  if (!response.ok) {
+    throw new Error(await response.text() || '登录失败');
+  }
+  
+  return response.json();
+};
+
+// 获取当前用户信息
+export const getCurrentUser = async () => {
+  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+    credentials: 'include',
+  });
+  
+  if (!response.ok) {
+    throw new Error('未登录或登录已过期');
+  }
+  
+  return response.json();
+};
+
+// 登出
+export const logout = async () => {
+  const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+  
+  if (!response.ok) {
+    throw new Error('登出失败');
+  }
+  
+  return response.json();
+};
 
 // 获取所有模型
 export const getAllModels = async () => {
@@ -49,20 +94,18 @@ export const downloadModel = async (filePath: string) => {
 };
 
 // 上传模型
-export const uploadModel = async (formData: FormData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/models/upload`, {
-      method: 'POST',
-      body: formData,
-    });
-    if (!response.ok) {
-      throw new Error('Failed to upload model');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error uploading model:', error);
-    return null;
+export const uploadModel = async (formData, onProgress) => {
+  const response = await fetch(`${API_BASE_URL}/models/upload`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.text() || '上传失败');
   }
+
+  return response.json();
 };
 
 // 获取个人信息

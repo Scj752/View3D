@@ -31,9 +31,9 @@ public class UsersController {
     private UserService userService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "获取用户信息", description = "根据用户ID获取详细信息")
+    @Operation(summary = "获取用户信息", description = "根据用户 ID 获取详细信息")
     public ResponseEntity<?> getUser(
-        @Parameter(description = "用户ID", required = true)
+        @Parameter(description = "用户 ID", required = true)
         @PathVariable String id) {
         Optional<User> userOptional = userService.getUserById(id);
         if (userOptional.isPresent()) {

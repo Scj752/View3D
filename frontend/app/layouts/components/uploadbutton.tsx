@@ -12,7 +12,7 @@ interface UploadButtonProps {
 
 export function UploadButton({ 
   label = "上传文件", 
-  accept = "image/*", 
+  accept = "zip/*", 
   multiple = false, 
   onFilesSelected,
   className = "" 

@@ -55,11 +55,12 @@ export default function Topbar() {
                                     />
                                 </div>
                             </Form>
-                            <UploadButton 
-                                label={isUploading ? <><FontAwesomeIcon icon={faSpinner} spin className="mr-2" />上传中...</> : "上传模型"}
-                                onClick={handleUploadClick}
-                                className={isUploading ? 'opacity-75 cursor-not-allowed' : ''}
-                            />
+                            <button
+                                onClick={() => navigate('/upload')}
+                                className="ml-4 px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                            >
+                                上传模型
+                            </button>
                             {isLoggedIn ? (
                                 <Link to="/profile">
                                     <img src={userAvatar} alt="用户头像" className="w-10 h-10 rounded-full" />

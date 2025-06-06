@@ -1,156 +1,114 @@
-// View3D/app/routes/login.tsx
-import React, { useState, useEffect } from 'react';
+// routes/login.tsx
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { login } from '../api';
 
-export default function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
-    const navigate = useNavigate();
+const LoginPage = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-    // 检查是否有记住的用户名和密码
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('rememberedUsername');
-        const storedPassword = localStorage.getItem('rememberedPassword');
-        if (storedUsername && storedPassword) {
-            setUsername(storedUsername);
-            setPassword(storedPassword);
-            setRememberMe(true);
-        }
-    }, []);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    
+    try {
+      // 调用登录API
+      await login(formData.username, formData.password);
+      
+      // 登录成功后跳转到首页或之前的页面
+      navigate('/');
+    } catch (err) {
+      setError(err.message || '登录失败，请重试');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        // 简单的表单验证
-        if (!username || !password) {
-            setError('请输入用户名和密码');
-            return;
-        }
-
-        // 模拟与后端交互
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', username);
-                localStorage.setItem('userAvatar', data.avatar);
-
-                // 处理记住密码
-                if (rememberMe) {
-                    localStorage.setItem('rememberedUsername', username);
-                    localStorage.setItem('rememberedPassword', password);
-                } else {
-                    localStorage.removeItem('rememberedUsername');
-                    localStorage.removeItem('rememberedPassword');
-                }
-
-                navigate('/');
-            } else {
-                const errorData = await response.json();
-                setError(errorData.message || '登录失败，请重试');
-            }
-        } catch (err) {
-            setError('网络错误，请稍后重试');
-        }
-    };
-
-    return (
-        <div className="pt-24 px-4 sm:px-6 lg:px-8 flex justify-center">
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">登录</h2>
-                {error && <p className="text-red-500 mb-2">{error}</p>}
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        placeholder="用户名"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="border border-gray-300 rounded-md p-2 mb-2 w-full focus:ring-pink-500 focus:border-pink-500"
-                    />
-                    <input
-                        type="password"
-                        placeholder="密码"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="border border-gray-300 rounded-md p-2 mb-2 w-full focus:ring-pink-500 focus:border-pink-500"
-                    />
-                    <div className="flex items-center mb-2">
-                        <input
-                            type="checkbox"
-                            checked={rememberMe}
-                            onChange={() => setRememberMe(!rememberMe)}
-                            className="mr-2"
-                        />
-                        <label>记住密码</label>
-                    </div>
-                    <button
-                        type="submit"
-                        className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-md w-full"
-                    >
-                        登录
-                    </button>
-                </form>
-            </div>
+  return (
+    <div className="max-w-md mx-auto p-6 mt-12 bg-white rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-6 text-center">用户登录</h1>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
         </div>
-    );
-}
-// // View3D/app/routes/login.tsx
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router';
+      )}
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+            用户名
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            密码
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <input
+              id="remember-me"
+              name="remember-me"
+              type="checkbox"
+              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+            />
+            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+              记住我
+            </label>
+          </div>
+          
+          <div className="text-sm">
+            <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
+              忘记密码?
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
+                        ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'}`}
+          >
+            {loading ? '登录中...' : '登录'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
 
-// export default function Login() {
-//     const [username, setUsername] = useState('');
-//     const [password, setPassword] = useState('');
-//     const navigate = useNavigate();
-
-//     const handleSubmit = (e) => {
-//         e.preventDefault();
-//         // 这里简单模拟登录成功，实际应用中需要验证用户名和密码
-//         if (username && password) {
-//             localStorage.setItem('isLoggedIn', 'true');
-// 			localStorage.setItem('username', username);
-//             localStorage.setItem('userAvatar', 'https://ts1.tc.mm.bing.net/th/id/OIP-C.5hemK99GC2sI6GEP3pYJmwAAAA?w=177&h=211&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2'); // 模拟用户头像
-//             navigate('/');
-//         } else {
-//             alert('请输入用户名和密码');
-//         }
-//     };
-
-//     return (
-//         <div className="pt-24 px-4 sm:px-6 lg:px-8">
-//             <h2 className="text-2xl font-bold text-gray-800 mb-4">登录</h2>
-//             <form onSubmit={handleSubmit}>
-//                 <input
-//                     type="text"
-//                     placeholder="用户名"
-//                     value={username}
-//                     onChange={(e) => setUsername(e.target.value)}
-//                     className="border border-gray-300 rounded-md p-2 mb-2 w-full"
-//                 />
-//                 <input
-//                     type="password"
-//                     placeholder="密码"
-//                     value={password}
-//                     onChange={(e) => setPassword(e.target.value)}
-//                     className="border border-gray-300 rounded-md p-2 mb-2 w-full"
-//                 />
-//                 <button
-//                     type="submit"
-//                     className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-md"
-//                 >
-//                     登录
-//                 </button>
-//             </form>
-//         </div>
-//     );
-// }
+export default LoginPage;

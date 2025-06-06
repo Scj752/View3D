@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.entity.Comment;
 import com.example.demo.entity.Model;
 import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.ModelRepository;
 import com.example.demo.repository.UserRepository;
@@ -44,6 +45,9 @@ class DataInitializer implements CommandLineRunner {
 	@Autowired
 	private CommentRepository commentRepository;
 
+	@Autowired
+	private UserService userService;
+
    	 @Override
 	public void run(String... args) throws Exception {
 		// delete all data
@@ -55,16 +59,16 @@ class DataInitializer implements CommandLineRunner {
 		User user1 = new User(null, "user1", "password1", "user1@example.com", LocalDateTime.now());
 		User user2 = new User(null, "user2", "password2", "user2@example.com", LocalDateTime.now());
 
-		userRepository.save(user1);
-		userRepository.save(user2);
+		userService.addUser(user1);
+		userService.addUser(user2);
 
 		// model repository initialization
 		Model model1 = new Model(null, "Test Model 1", user1.getId(), "This is a test model",
             Arrays.asList("test", "model"), LocalDateTime.now(), 0, 0, 10.5,
-                "http://example.com/preview1.jpg", "/path/to/file1");
+                "https://placecats.com/300/200", "/models/607b5d65-d3b8-4696-8544-be75ac996c7f_2020_porsche_718_cayman_gt4.zip");
 	    Model model2 = new Model(null, "Test Model 2", user2.getId(), "Another test model",
 	    	Arrays.asList("test", "model2"), LocalDateTime.now(), 0, 0, 20.5,
-	                "http://example.com/preview2.jpg", "/path/to/file2");
+	                "https://placecats.com/300/200", "/models/607b5d65-d3b8-4696-8544-be75ac996c7f_2020_porsche_718_cayman_gt4.zip");
 
 	    modelRepository.save(model1);
 	    modelRepository.save(model2);
